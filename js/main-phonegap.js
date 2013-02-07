@@ -8,7 +8,13 @@ define(function(require, exports, module) {
 		App = require('controllers/App')
 		;
 
-
+	UWAP.utils.jso_configure({
+		"uwap": {
+			client_id: "app_feed",
+			authorization: UWAP.utils.getEngineURL('/api/oauth/authorization'),
+			redirect_uri: "https://feed.uwap.org/_/passiveResponse"
+		}
+	});
 
 
 	document.addEventListener('deviceready', function() {
@@ -25,16 +31,16 @@ define(function(require, exports, module) {
 		redirect_uri = 'uwap://';
 
 		// var client_id = 'app_' + UWAP.utils.appid;
-		var client_id = UWAP.utils.appid;
+		// var client_id = UWAP.utils.appid;
 
-		jso.jso_configure({
-			"uwap": {
-				client_id: client_id,
-				authorization: UWAP.utils.getEngineURL('/api/oauth/authorization'),
-				redirect_uri: redirect_uri,
-				passive_redirect_uri: passive_redirect_uri
-			}
-		}, {debug: 1});
+		// jso.jso_configure({
+		// 	"uwap": {
+		// 		client_id: client_id,
+		// 		authorization: UWAP.utils.getEngineURL('/api/oauth/authorization'),
+		// 		redirect_uri: redirect_uri,
+		// 		passive_redirect_uri: passive_redirect_uri
+		// 	}
+		// }, {debug: 1});
 
 		App.init();
 
