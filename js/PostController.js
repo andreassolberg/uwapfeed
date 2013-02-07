@@ -3,13 +3,16 @@ define(function(require, exports, module) {
 	var 
 		$ = require('jquery'),
 		UWAP = require('uwap-core/js/core'),
-		moment = require('uwap-core/js/moment')
+		moment = require('uwap-core/js/moment'),
+		hogan = require('uwap-core/js/hogan')
 		;
 
 	require('uwap-core/bootstrap/plugins/datepicker/bootstrap-datepicker');
-
-
-
+	
+	var tmpl = {
+		"post": require('uwap-core/js/text!templates/post.html')
+	};
+	
 	var PostController = function(pane) {
 		this.pane = pane;
 		this.el = pane.el;
@@ -18,8 +21,13 @@ define(function(require, exports, module) {
 
 		this.selectedGroups = {};
 
+		this.templates = {
+			"post": hogan.compile(tmpl.post)
+		};
 
-		$("#postTmpl").tmpl().appendTo(this.el);
+
+		$(this.templates.post.render({today: moment().add('days', 1).format('DD-MM-YYYY')  })).appendTo(this.el);
+
 		
 		this.el.on("click", ".actPost", $.proxy(this.actPost, this));
 
@@ -132,12 +140,12 @@ define(function(require, exports, module) {
 		this.el.find("div.postc.post-" + target).show();
 
 		this.el.find("div.postc.post-" + target + " .focusfield").focus();
-
 	}
 
 
 	PostController.prototype.parseDate = function(str) {
-		return moment(str, "DD-MM-YYYY HH:mm").valueOf();
+		console.log("parseDate(" + str + ")");
+		return moment(str, "DD-MM-YYYY HH:mm").unix();
 	}
 
 	PostController.prototype.actPost = function(e) {
@@ -213,9 +221,14 @@ define(function(require, exports, module) {
 
 		var str = this.el.find("textarea").val();
 
+		if (!msg.groups || msg.groups.length < 1) {
+			alert('You must share with one or more groups!');
+			return;
+		} 
+
 		console.log("Pushing obj", msg); // return;
 		// this.post(msg);
-
+		// return;
 		if (this.callback) {
 			this.callback(msg);
 			console.log("POSTING A NEW MESSAGE ", msg); 

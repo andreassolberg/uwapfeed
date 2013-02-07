@@ -10,754 +10,82 @@
 		<link rel='stylesheet' href="css/feed.css" rel="stylesheet" />
 		<link rel='stylesheet' href='css/feed-mobile.css' media='screen and (max-width: 767px)' />
 
-		<!-- <script type="text/javascript" data-main="main" src="/_/js/require.js"></script> -->
-		<script type="text/javascript" src="phonegap.js"></script>
-		<!-- <script type="text/javascript" src="cordova-2.1.0.js"></script> -->
-		<script type="text/javascript" data-main="js/main-phonegap" src="js/require.js"></script>
-
-
-		<script id="groupItem" type="text/x-jquery-tmpl">
-			<div class="group">
-
-				<p>
-				
-
-					{{if subscribed}}
-						<button class="actUnsubscribe btn btn-mini">Unsubscribe</button>				
-					{{else}}
-						<button class="actSubscribe btn btn-success btn-mini">Subscribe</button>
-					{{/if}}
-				
-					<!--
-					{{if subscribed}}
-						<span class="label label-success">Subscribed</span>
-					{{else}}
-						
-					{{/if}}
-					-->
-
-					${title} 
-				</p>
-
-<!--
-				
-					{{if admin}}
-						<span class="label label-info">Admin</span>
-					{{/if}}
-					{{if member}}
-						<span class="label label-success">Member</span>
-					{{/if}}
-					{{if owner}}
-						<span class="label label-danger">Owner</span>
-					{{/if}}
-				
--->
-			</div>
+		<script src="phonegap.js"></script>
+		<script src="childbrowser.js"></script>
+		<script type="text/javascript" >
+			window.isPhonegap = true;
 		</script>
-
-
-		<script id="postCommentTmpl" type="text/x-jquery-tmpl">
-
-			<div class="comment">
-			<form class="form-horizontal">
-
-				{{if user}}
-					<img class="profileimg img-polaroid" src="${user.profileimg}" />
-				{{/if}}
-				{{if client}}
-					<img class="profileimg img-polaroid" src="${client.profileimg}" />
-				{{/if}}
-				
-				<textarea class="focusfield field-message" style="width: 90%" placeholder="Write a comment..."></textarea>
-				<div class="btn-group">
-				  <button class="btn btn-mini actPostComment">Post</button>
-				  <!-- <button class="btn actSharewith">Share with</button> -->
-				</div>
-
-			</form>
-			</div>
-
-		</script>
-
-
-		<script id="commentTmpl" type="text/x-jquery-tmpl">
-			<div id="${id}" class="comment">
-
-				{{if user}}
-					<img class="profileimg img-polaroid" src="${user.profileimg}" />
-				{{/if}}
-
-				{{if client}}
-					<img class="profileimg img-polaroid" src="${client.profileimg}" />
-				{{/if}}
-
-				{{if title}}
-					<h4>${title}</h4>
-				{{/if}}
-
-				<p>${message}</p>
-
-				{{if thumbnail}}
-					<div><img class="thumb" src="${thumbnail}" /></div>
-				{{/if}}
-
-				{{if links}}
-					{{each links}}
-				        <span style="margin-right: 2em" class=""><i class="icon-share-alt"></i><a target="_blank" href="${$value.href}">${$value.text}</a></span> 
-				    {{/each}}
-				{{/if}}
-
-				<div class="footer">
-					{{if user}}
-						<span><i class=" icon-user"></i> ${user.name}</span>
-					{{/if}}
-					{{if client}}
-						<span><i class="icon-briefcase"></i> ${client.client_name}</span>
-					{{/if}}
-					
-					<span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span>
-					<!--
-					{{each groupnames}}
-				        <span class="label">${$value}</span>
-				    {{/each}}
-				    -->
-				</div>
-
-
-
-			</div>
-		</script>
-
-		<script id="videoplayer" type="text/x-jquery-tmpl">
-			<div id="videoPlayer" >
-
-		    	<video width="${width}" height="${height}" controls="controls" autoplay="autoplay">
-					  <source src="${filename}" type="video/mp4" />
-					  Nettleseren din mangler st&oslash;tte for HTML5 video.
-				</video>
-				<div>
-				    <button class="close btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			    </div>
-			</div>
-		</script>
-
-
-
-	<script id="itemMediaTmpl" type="text/x-jquery-tmpl">
-
-
-		<li id="${id}" class="item mediaItem span4">
-		<div class="thumbnail">
-
-			{{if media.thumbnail}}
-
-				<div><img class="videoitem thumb" src="${media.thumbnail}" /></div>
-			{{else}}
-				<div><img class="videoitem thumb" src="/img/300x200.gif" /></div>
-				
-			{{/if}}
-
-			{{if title}}
-				<h4>${title}</h4>
-			{{/if}}
-
-			<p>${message}</p>
-
-
-			{{if links}}
-				{{each links}}
-			        <span style="margin-right: 2em" class=""><i class="icon-share-alt"></i><a target="_blank" href="${$value.href}">${$value.text}</a></span> 
-			    {{/each}}
-			{{/if}}
-			
-			<div class="footer">
-				{{if user}}
-					<span><i class=" icon-user"></i> ${user.name}</span>
-				{{/if}}
-				{{if client}}
-					<span><i class="icon-briefcase"></i> ${client.client_name}</span>
-				{{/if}}
-				
-				<span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span>
-
-				{{each groupnames}}
-			        <span class="label">${$value}</span>
-			    {{/each}}
-
-			    
-			</div>
-			
-			<!--
-			{{if user}}
-				<img class="profileimg img-polaroid" src="http://dev.app.bridge.uninett.no/_/api/photo.php?a=${user.a}" />
-			{{/if}}
-			{{if client}}
-				<img class="profileimg img-polaroid" src="http://dev.app.bridge.uninett.no/_/api/logo.php?client=${client.client_id}" />
-			{{/if}}
-			-->
-			</div>
-		</li>
-	</script>
-
-	<script id="itemFileTmpl" type="text/x-jquery-tmpl">
-
-		<div id="${id}" class="item fileItem">
-
-			{{if files}}
-				<ul class="nav nav-list">
-					{{each files}}
-				        <li>
-				        	<a target="_blank" href="${$value.href}"><i class="icon-file"></i> ${$value.filename}
-							{{if user}}
-								<span><i class=" icon-user"></i> ${user.name}</span>
-							{{/if}}
-							{{if client}}
-								<span><i class="icon-briefcase"></i> ${client.client_name}</span>
-							{{/if}}
-							
-							<span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span>
-
-							{{each groupnames}}
-						        <span class="label">${$value}</span>
-						    {{/each}}
-						    </a>
-				        </li>
-				    {{/each}}
-			    </ul>
-			{{/if}}
-
-		</div>
-	</script>
-
-	<script id="itemUpcomingTmpl" type="text/x-jquery-tmpl">
-		<div id="${id}" class="item basicItem {{if promoted}}promoted{{/if}}" style="font-size: 95%; border-bottom: 1px dashed #e4e4e4; background: #fff; padding: 2px">
-
-			{{if title}}
-				<h5><a href="#!/item/${id}">${title}</a></h5>
-			{{/if}}
-
-			<p style="max-height: 40px; overflow-y: hidden">{{html message}}</p>
-
-			{{if thumbnail}}
-				<div><img class="thumb" src="${thumbnail}" /></div>
-			{{/if}}
-
-			{{if media}}
-				{{if media.thumbnail}}
-					<div><img class="videoitem thumb" src="${media.thumbnail}" /></div>
-				{{else}}
-					<div><img class="videoitem thumb" src="http://placehold.it/300x200" /></div>
-				{{/if}}				
-			{{/if}}
-
-
-
-			{{if $data.signup}}
-			<!--
-				<div class="well responseBox event-signup">
-
-
-					<button data-status="yes" class="responseOption btn btn-small btn-success">Attend</button>
-					<button data-status="maybe" class="responseOption btn btn-small btn-warning">Maybe</button>
-					<button data-status="no" class="responseOption btn btn-small btn-inverse">Appologize</button>
-
-					{{if $data.signup.deadline}}
-						<div class="">
-							<p><strong>Deadline for signing up</strong><br />{{= $data.getDeadlineDT() }}</p>
-							<p><i class="icon-exclamation-sign"></i> {{= $data.getUntil() }}</p>
-						</div>
-					{{/if}}
-				</div>
-			-->
-			{{/if}}
-
-
-			<div class="row-fluid">
-				<div class="span6">
-
-					<p style="font-size: 110%" ><strong>{{= $data.getDT() }}</strong></p>
-					<p><i class="icon-time"></i> {{= $data.getUntil() }}</p>
-				</div>
-				<div class="span6">
-
-					<!-- <h4>Location</h4> -->
-					<p><strong>${location.local}</strong><br /><i class="icon-map-marker"></i> ${location.address}</p>
-
-				</div>
-
-			</div>
-			
-
-
-			
-		
-
-
-
-
-
-
-			<div class="footer" style="display: none">
-
-				{{if keywords}}
-					<div>
-						{{each keywords}}
-							<span class="">${$value}</span>, 
-					    {{/each}}
-				    </div>
-				{{/if}}
-
-				{{if author}}
-					<span><i class=" icon-user"></i> ${author}</span>
-				{{/if}}
-				{{if user}}
-					<span><i class=" icon-user"></i> ${user.name}</span>
-				{{/if}}
-				{{if client}}
-					<span><i class="icon-briefcase"></i> ${client.client_name}</span>
-				{{/if}}
-				
-				<span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span>
-				<!-- <span><i class=" icon-time"></i> activity <span class="ts" data-ts="${lastActivity}"></span></span> -->
-
-				{{each groupnames}}
-			        <span class="label">${$value}</span>
-			    {{/each}}
-			    {{if public}}
-			    	<span class="label label-inverse"><i class="icon-eye-open icon-white"></i> Public</span>
-			    {{/if}}
-			    {{if promoted}}
-				    <span class="label label-info"><i class="icon-star icon-white"></i> Promoted</span>
-			    
-			    {{/if}}
-			    
-			</div>
-
-
-
-
-
-		</div>
-
-
-	</script>
-
-
-	<script id="itemTmpl" type="text/x-jquery-tmpl">
-
-		<div id="${id}" class="item basicItem {{if promoted}}promoted{{/if}}">
-
-			{{if user}}
-				
-				<img class="profileimg img-polaroid" src="${user.profileimg}" />
-			{{/if}}
-			{{if client}}
-				
-				<img class="profileimg img-polaroid" src="${client.profileimg}" />
-			{{/if}}
-
-			<div style="float: right" class="btn-group pull-right">
-				<a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
-					<i class="icon-cog"></i> 
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="#!/item/${id}"><i class="icon-share-alt"></i> Open</a></li>
-					<li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
-					<li><a class="actDelete" href="#"><i class="icon-trash"></i> Delete this item</a></li>
-					<li><a href="#"><i class="icon-ban-circle"></i> Report this issue</a></li>
-					<li class="divider"></li>
-					<li><a href="#"><i class="icon-star"></i> Promote this item</a></li>
-				</ul>
-			</div>
-
-			{{if title}}
-				<h4>${title}</h4>
-			{{/if}}
-
-			<p>{{html message}}</p>
-
-			{{if thumbnail}}
-				<div><img class="thumb" src="${thumbnail}" /></div>
-			{{/if}}
-
-			{{if media}}
-				{{if media.thumbnail}}
-					<div><img class="videoitem thumb" src="${media.thumbnail}" /></div>
-				{{else}}
-					<div><img class="videoitem thumb" src="http://placehold.it/300x200" /></div>
-				{{/if}}				
-			{{/if}}
-
-			{{if $data.hasClass("event") }}
-
-				<div class="row-fluid" style="margin-top: 16px; margin-bottom: 10px">
-
-
-
-
-					{{if $data.signup}}
-						<div class="span4 well responseBox event-signup">
-
-
-							<button data-status="yes" class="responseOption btn btn-small btn-success">Attend</button>
-							<button data-status="maybe" class="responseOption btn btn-small btn-warning">Maybe</button>
-							<button data-status="no" class="responseOption btn btn-small btn-inverse">Appologize</button>
-
-							{{if $data.signup.deadline}}
-								<div class="">
-									<p><strong>Deadline for signing up</strong><br />{{= $data.getDeadlineDT() }}</p>
-									<p><i class="icon-exclamation-sign"></i> {{= $data.getUntil() }}</p>
-								</div>
-							{{/if}}
-						</div>
-
-					{{/if}}
-
-
-
-
-					<div class="span4" >
-						<!-- <h4>Time and date</h4> -->
-						<p style="font-size: 130%" ><strong>{{= $data.getDT() }}</strong></p>
-						<p><i class="icon-time"></i> {{= $data.getUntil() }}</p>
-					</div>
-
-
-
-					<div class="span4">
-						<!-- <h4>Location</h4> -->
-						<p><strong>${location.local}</strong><br /><i class="icon-map-marker"></i> ${location.address}</p>
-					</div>
-
-				</div>
-
-	<!--			<div class="controllList">
-					<p>
-						<a href="#" class="actShow">show participants list</a>
-						<a href="#" style="display: none" class="actHide">hide participants list</a>
-					</p>
-				</div>
-	-->
-				{{if $data.signup }}
-				<div style="display: block; margin-top: 1em; margin-bottom: 1em">
-					<h4>Participant list</h4>
-
-					{{if $data.signup && $data.signup.max}}
-						
-						<div style="margin-top: 8px; margin-bottom: 8px">
-							<p>3 of {{= $data.signup.max }} participants signed up. <span class="badge badge-info">7 spaces left</span></p>
-						</div>
-					
-					{{/if}}
-
-					<table class="participants table table-striped">
-
-					</table>
-				</div>
-				{{/if}}
-
-			{{/if}}
-
-			{{if links}}
-				{{each links}}
-			        <span style="margin-right: 2em" class=""><i class="icon-share-alt"></i><a target="_blank" href="${$value.href}">${$value.text}</a></span> 
-			    {{/each}}
-			{{/if}}
-
-			{{if files}}
-				<ul class="nav nav-list">
-					{{each files}}
-				        <li><a target="_blank" href="${$value.href}"><i class="icon-file"></i> ${$value.filename}</a></li>
-				    {{/each}}
-			    </ul>
-			{{/if}}
-
-			<div class="footer">
-
-				{{if keywords}}
-					<div>
-						{{each keywords}}
-							<span class="">${$value}</span>, 
-					    {{/each}}
-				    </div>
-				{{/if}}
-
-				{{if author}}
-					<span><i class=" icon-user"></i> ${author}</span>
-				{{/if}}
-				{{if user}}
-					<span><i class=" icon-user"></i> ${user.name}</span>
-				{{/if}}
-				{{if client}}
-					<span><i class="icon-briefcase"></i> ${client.client_name}</span>
-				{{/if}}
-				
-				<span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span>
-				<!-- <span><i class=" icon-time"></i> activity <span class="ts" data-ts="${lastActivity}"></span></span> -->
-
-				{{each groupnames}}
-			        <span class="label">${$value}</span>
-			    {{/each}}
-			    {{if public}}
-			    	<span class="label label-inverse"><i class="icon-eye-open icon-white"></i> Public</span>
-			    {{/if}}
-			    {{if promoted}}
-				    <span class="label label-info"><i class="icon-star icon-white"></i> Promoted</span>
-			    
-			    {{/if}}
-			    
-			</div>
-
-
-
-			<div class="comments">
-			</div>
-
-			<span class="commentlink" style="float: right; clear: right; font-size: small"><a class="muted actEnableComment" href="#">Add comment</a></span>
-			<br class="clearfix" />
-
-			<div class="postcomment">
-			</div>
-
-
-
-		</div>
-	</script>
-
-	<script id="participantTmpl" type="text/x-jquery-tmpl">
-		<tr>
-			<td style="width: 24px">
-			{{if user}}
-				<img class="" style="width: 26px; border: 1px solid #ccc" src="${user.profileimg}" />
-			{{/if}}
-			</td>
-
-			{{if user}}
-				<td>${user.name}</span></td>
-				<td><i class="icon-envelope"></i> ${user.mail}</span></td>
-			{{/if}}
-			<td>
-			{{if $data.status === "yes"}}
-				<span class="label label-success">Attend</span>
-			{{else}}
-				{{if $data.status === "maybe"}}
-					<span class="label label-warning">Maybe</span>
-				{{else}}
-					<span class="label label-inverse">Appologized</span>
-				{{/if}}
-			{{/if}}
-			</td>
-			<td><span><i class=" icon-time"></i> <span class="ts" data-ts="${ts}"></span></span></td>
-		</tr>
-	</script>
-
-
-	<script id="postTmpl" type="text/x-jquery-tmpl">
-				<div id="post" style="" class="well">
-
-					<form class="form-horizontal">
-					<div class="btn-toolbar">
-
-						<div class="btn-group" data-toggle="buttons-radio">
-							<button id="btn-message" class="btn posttype"  rel="tooltip" data-placement="bottom" data-original-title="Post a message">
-								<i class="icon-comment"></i></button>
-							<button id="btn-link" class="btn posttype"  rel="tooltip" data-placement="bottom" data-original-title="Share a link">
-								<i class="icon-share"></i></button>
-							<button id="btn-event" class="btn posttype"  rel="tooltip" data-placement="bottom" data-original-title="Add an event">
-								<i class="icon-calendar"></i></button>
-							<button id="btn-article" class="btn posttype"  rel="tooltip" data-placement="bottom" data-original-title="Write an article">
-								<i class="icon-align-left"></i></button>
-							<button id="btn-file" class="btn posttype"  rel="tooltip" data-placement="bottom" data-original-title="Share a file">
-								<i class="icon-file"></i></button>
-						</div>
-
-						<div class="btn-group">
-							<a class="btn dropdown-toggle actSharewith" data-toggle="dropdown" href="#">
-								Share with
-								<span class="caret"></span>
-							</a>
-							<ul id="sharewithgrouplist" class="dropdown-menu">
-							</ul>
-						</div>
-						<button class="btn btn-primary actPost">Post</button>
-						<a href="#!/" id="postDisableBtn" class="btn">Discard</a>
-					</div>
-
-					<div>
-						<p><label><input class="field-public" type="checkbox"> Public</label> 
-						   <label><input class="field-promoted" type="checkbox"> Promoted</label></p>
-					</div>
-					<div class="sharewith" style="margin-bottom: 8px">Shared with: <span class="shareitems"></span> <a style="margin-left: 1em" class="muted resetsharedwith" href="#">reset</a></div>
-
-
-					<div style="display: none" class="postc post-message">
-						<textarea class="focusfield field-message" style="width: 100%" placeholder="Type in a message..."></textarea>
-					</div>
-					<div style="display: none" class="postc post-link">
-						<p><input class="focusfield field-link" style="width: 100%" type="text" id="file" placeholder="http://"></p>
-						<p><input type="text" class="field-title" style="width: 100%" name="title" placeholder="Link title" /></p>
-						<p><textarea class="field-message" style="width: 100%" placeholder="Type in a message... (optional)"></textarea></p>
-					</div>
-					<div style="display: none" class="postc post-event">
-						<p><input type="text" class="focusfield field-title" style="width: 100%" name="title" placeholder="Event title" /></p>
-						<textarea class="field-message" style="height: 160px; width: 100%" placeholder="Description of event..."></textarea>
-						
-						<div>
-							<p><strong>Event date and time</strong></p>
-							<div class="input-append date datepicker" id="dp3" data-date="" data-date-format="dd-mm-yyyy">
-							  <input id="" class="field-eventdate eventtime span2" size="16" type="text" value="12-02-2012">
-							  <span class="add-on"><i class="icon-th"></i></span>
-							</div>
-
-							<input class="field-eventtime" size="4" style="width: 50px" type="text" value="08:00">
-						</div>
-
-						<div>
-							<p><strong>Location</strong></p>
-							<input class="field-location-address span6" size="" style="" type="text" value="" placeholder="Address" />
-							<input class="field-location-local span6" size="" style="" type="text" value="" placeholder="Local reference (meeting room etc.)" />
-						</div>
-
-						<div style="margin-top: 1em">
-							<label class="checkbox">
-								<input id="" class="field-allowsignup responsiveEventUI" type="checkbox" checked="checked"> Allow users to sign up for this event.
-							</label>
-
-							<div class="section-signup">
-								<!-- <p><strong>Deadline for signing up</strong></p> -->
-								<label class="checkbox">
-									<input id="" class="field-deadline responsiveEventUI" type="checkbox" /> 
-									Deadline for signing up
-								</label>
-								<div class="section-deadline">
-									<div class="input-append date datepicker" id="dp3" data-date="" data-date-format="dd-mm-yyyy">
-									  <input class="field-deadlinedate span2" size="16" type="text" value="12-02-2012">
-									  <span class="add-on"><i class="icon-th"></i></span>
-									</div>
-									<input class="field-deadlinetime" size="4" style="width: 50px" type="text" value="08:00">
-								</div>
-
-								<div>
-									<label class="checkbox">
-										<input id="" class="field-maxparticipants responsiveEventUI" type="checkbox" > 
-										Max number of participants 
-									</label>
-									<div class="section-max">
-										<input id="" class="field-maxparticipants-value" type="input" size="3" value="10" style="display: inline" />
-									</div>
-								</div>
-							</div>
-
-
-
-						</div>
-
-					</div>
-
-					<div style="display: none" class="postc post-article">
-						<p><input type="text" class="focusfield field-title" style="width: 100%" name="title" placeholder="Title..." /></p>
-						<textarea class="field-message" style="height: 300px; width: 100%" placeholder="Write an article..."></textarea>
-					</div>
-					<div style="display: none" class="postc post-file">
-						<textarea class="focusfield field-message" style="width: 100%" placeholder="Type in a message..."></textarea>
-
-						  <div class="control-group">
-						    <label class="control-label" for="filename">Filename</label>
-						    <div class="controls">
-						      <input type="text" id="filename" class="field-filename" placeholder="Filename">
-						    </div>
-						  </div>
-
-						  <div class="control-group">
-						    <label class="control-label" for="fileurl">URL to file</label>
-						    <div class="controls">
-						      <input type="text" id="fileurl" class="field-fileurl" placeholder="http://">
-						    </div>
-						  </div>
-
-						<!-- <p><input class="field-file" name="uploadedfile" type="file" /></p> -->
-					</div>
-
-					
-					</form>
-					
-				</div>	
-			</script>
-
-
-
-
-
-	</head>
-
-	<body>
-
-
-		<div class="loader-hideOnLoad" stlye="margin: 20%">
-			<p><img src="img/ajax-loader.gif" /> Loading application...</p>
-		</div>
-
-
-		<div class="navbar loader-showOnLoad" style="display: none">
-          <div class="navbar-inner">
-            <div class="container">
-<!--                   <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </a> -->
-              <a class="brand" href="#!/">UWAP eduFeed</a>
-
-
-            <ul class="nav pull-right">
-              <li id="authmenu" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i><span class="userextra"> <span class="myname"></span> <b class="caret"></b></span></a>
-                <ul id="authmenuoptions" class="dropdown-menu">
-                	<li><a href="#!/notificationsetup">Setup notifications</a></li>
-                	<li><a target="_blank" href="https://groupmanager.uwap.org">Manage groups</a></li>
-                	<li><a target="_blank" href="https://subscribe.uwap.org">Subscribe to open groups</a></li>
-                	<li><a href="#!/privacy">Privacy notice</a></li>
-                	<li class="divider"></li>
-                	<li><a id="actLogout" href="#">Logout</a></li>
-                </ul>
-              </li>
+		<script type="text/javascript" data-main="main-phonegap" src="js/require-phonegap.js"></script>
+	
+</head>
+
+
+
+<body>
+	<div class="loader-hideOnLoad" stlye="margin: 20%">
+		<p><img src="/img/ajax-loader.gif" /> Loading application...</p>
+	</div>
+
+
+	<div class="navbar loader-showOnLoad" style="display: none">
+      <div class="navbar-inner">
+        <div class="container">
+<!--          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a> -->
+          <a class="brand" href="#!/">UWAP eduFeed</a>
+
+
+        <ul class="nav pull-right">
+          <li id="authmenu" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i><span class="userextra"> <span class="myname"></span> <b class="caret"></b></span></a>
+            <ul id="authmenuoptions" class="dropdown-menu">
+            	<li><a href="#!/notificationsetup">Setup notifications</a></li>
+            	<li><a target="_blank" href="https://groupmanager.uwap.org">Manage groups</a></li>
+            	<li><a target="_blank" href="https://subscribe.uwap.org">Subscribe to open groups</a></li>
+            	<li><a href="#!/privacy">Privacy notice</a></li>
+            	<li class="divider"></li>
+            	<li><a id="actLogout" href="#">Logout</a></li>
             </ul>
+          </li>
+        </ul>
 
 
-            <ul class="nav pull-right">
+        <ul class="nav pull-right">
 
-              <li id="feednotifications" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span style="display: none" class="badge badge-warning notificationcount"></span> <i class="icon-bullhorn"></i></a>
-                <ul class="dropdown-menu notificationlist">
-                  <li class="divider"></li>
-                  <li class="markallread"><a href="#">Mark all as read...</a></li>
-                </ul>
-              </li>
-
+          <li id="feednotifications" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span style="display: none" class="badge badge-warning notificationcount"></span> <i class="icon-bullhorn"></i></a>
+            <ul class="dropdown-menu notificationlist">
+              <li class="divider"></li>
+              <li class="markallread"><a href="#">Mark all as read...</a></li>
             </ul>
+          </li>
 
-             <form class="navbar-search pull-left" action="">
-                  <input type="text" class="search-query span4" placeholder="Search">
-                </form>
+        </ul>
+
+         <form class="navbar-search pull-left" action="">
+              <input type="text" class="search-query span4" placeholder="Search">
+            </form>
 <!--
-              <div class="nav-collapse">
-              
-
-                <ul class="nav">
-                  <li class="active"><a href="#">Feed</a></li>
-                  <li><a href="#">Manage</a></li>
-                </ul>
-
+          <div class="nav-collapse">
           
 
+            <ul class="nav">
+              <li class="active"><a href="#">Feed</a></li>
+              <li><a href="#">Manage</a></li>
+            </ul>
 
-              </div>  --><!-- /.nav-collapse -->
+      
 
 
-            </div>
-          </div><!-- /navbar-inner -->
+          </div>  --><!-- /.nav-collapse -->
+
+
         </div>
+      </div><!-- /navbar-inner -->
+    </div>
 
 
 
@@ -765,113 +93,113 @@
 
 
 
-	<div class="container-fluid loader-showOnLoad" style="display: none">
+<div class="container-fluid loader-showOnLoad" style="display: none">
 
-		<div class="row-fluid">
+	<div class="row-fluid">
 
-			<div class="span8">
-
-
-				<div class="navbar">
-					<div class="navbar-inner">
+		<div class="span8">
 
 
-						<ul id="feedmenucontainer" class="nav">
-		                  <li id="feedmenu" class="dropdown">
-		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="selectedFeed">All groups</span> <b class="caret"></b></a>
-		                    <ul id="feedlist" class="dropdown-menu">
-		                    </ul>
-		                  </li>
-		                  <li class="divider-vertical"></li>
-						</ul>
-
-						<ul id="navbar" class="nav">
-						</ul>
-
-						
-						<div style="margin-left: 4px" id="calendarToggle" class="nav pull-right">
-							<!-- <li><a href="#">Post content</a></li> -->
-
-							<a id="" href="#!/calendar" class="btn btn-info"><i class="icon-time icon-white"></i></a>
-						</div>
-
-						<div id="postEnable" class="nav pull-right">
-							<!-- <li><a href="#">Post content</a></li> -->
-							<a id="postEnableBtn" href="#!/post" class="btn btn-inverse">Post content</a>
-						</div>
-<!-- 
-						<div id="2postEnable" class="nav pull-right">
-							<li><a href="#">Post content</a></li>
-							<a id="2postEnableBtn" class="btn" href="#!/post" class="">Post content</a>
-						</div> -->
+			<div class="navbar">
+				<div class="navbar-inner">
 
 
-						<ul id="viewbarcontroller" class="nav pull-right">
-							<li class="divider-vertical"></li>
-							<li id="feedm2enu" class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="selectedView"></span> <b class="caret"></b></a>
-								<ul id="viewtypes" class="dropdown-menu">
-								</ul>
-							</li>
-							<li class="divider-vertical"></li>
-						</ul>
+					<ul id="feedmenucontainer" class="nav">
+	                  <li id="feedmenu" class="dropdown">
+	                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="selectedFeed">All groups</span> <b class="caret"></b></a>
+	                    <ul id="feedlist" class="dropdown-menu">
+	                    </ul>
+	                  </li>
+	                  <li class="divider-vertical"></li>
+					</ul>
+
+					<ul id="navbar" class="nav">
+					</ul>
 
 
+
+					<!--
+					<div style="margin-left: 4px" id="calendarToggle" class="nav pull-right">
+						<a id="" href="#!/calendar" class="btn btn-info"><i class="icon-time icon-white"></i></a>
 					</div>
-				</div>
+					-->
+					<div id="postEnable" class="nav pull-right">
+						<!-- <li><a href="#">Post content</a></li> -->
+						<a id="postEnableBtn" href="#!/post" class="btn btn-inverse">Post content</a>
+					</div>
+<!-- 
+					<div id="2postEnable" class="nav pull-right">
+						<li><a href="#">Post content</a></li>
+						<a id="2postEnableBtn" class="btn" href="#!/post" class="">Post content</a>
+					</div> -->
 
+					<!-- 
+					<ul  id="viewbarcontroller" class="nav pull-right">
+						<li class="divider-vertical"></li>
+						<li id="feedmenu" class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="selectedView"></span> <b class="caret"></b></a>
+							<ul id="viewtypes" class="dropdown-menu">
+							</ul>
+						</li>
+						<li class="divider-vertical"></li>
+					</ul>
+					-->
 
-			<div id="panecontainer">
-			</div>
-
-
-			</div>
-
-			<div class="sidebar hidden-phone span4">
-
-				<div class="sidebaritem">
-				<h4>About this group <i class="icon-reorder"></i></h4>
-				<p>This is the description of the group you are currently viewing...</p>
-				<p>36 group members - <a href="https://groupmanager.uwap.org">manage group</a></p>
-				</div>
-
-				<div class="sidebaritem">
-				<h4>Upcoming <i class="icon-calendar"></i></h4>
-				<div id="upcoming"></div>
-				</div>
-
-
-
-				<div class="sidebaritem">
-				<h4>Webconference <i class="icon-facetime-video"></i></h4>
-				<div>
-					<p>This group has configured a web conference room.</p>
-					<p><button class="btn btn-mini">Join meeting</button></p>
-				</div>
-				</div>
-
-				<div class="sidebaritem">
-				<h4>Subscribe to groups <i class="icon-group"></i></h4>
-				<div id="subscribeproposals"></div>
 				</div>
 			</div>
+
+
+		<div id="panecontainer">
+		</div>
 
 
 		</div>
 
+		<div class="sidebar hidden-phone span4">
+
+			<div class="sidebaritem">
+			<h4>About this group <i class="icon-reorder"></i></h4>
+			<p>This is the description of the group you are currently viewing...</p>
+			<p>36 group members - <a href="https://groupmanager.uwap.org">manage group</a></p>
+			</div>
+
+			<div class="sidebaritem">
+			<h4>Upcoming <i class="icon-calendar"></i></h4>
+			<div id="upcoming"></div>
+			</div>
+
+
+
+			<div class="sidebaritem">
+			<h4>Webconference <i class="icon-facetime-video"></i></h4>
+			<div>
+				<p>This group has configured a web conference room.</p>
+				<p><button class="btn btn-mini">Join meeting</button></p>
+			</div>
+			</div>
+
+			<div class="sidebaritem">
+			<h4>Subscribe to groups <i class="icon-group"></i></h4>
+			<div id="subscribeproposals"></div>
+			</div>
+		</div>
+
+
+	</div>
 
 
 
 
 
-		</div><!--/.fluid-container-->
+
+	</div><!--/.fluid-container-->
 
 
 
 
 
-		<div id="modalContainer"></div>
+	<div id="modalContainer"></div>
 
 
-	</body>
+</body>
 </html>

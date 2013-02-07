@@ -1,10 +1,5 @@
 define(function(require, exports, module) {
 
-
-	// document.addEventListener('deviceready', function() {
-	// 		alert(1);
-	// 	});
-
 	var 
 
 		$ = require('jquery'),
@@ -43,22 +38,24 @@ define(function(require, exports, module) {
 
 		App.init();
 
-
-		window.handleOpenURL = function (url) {
-			// TODO: parse the url, and do something 
-			console.log("REDIRET BACK JUHU");
-			console.log("url:" + url + ":");
-
-			setTimeout(function() {
-				console.log("run timeout()");
-				jso.jso_checkfortoken('uwap', url, function() {
-					console.log("found token()");
-					App.init();
-				});
-			}, 0);
-		}
-
 	}, false);
+
+
+	window.handleOpenURL = function (url) {
+		// TODO: parse the url, and do something 
+		console.log("REDIRET BACK JUHU");
+		console.log("url:" + url + ":");
+
+		setTimeout(function() {
+			console.log("run timeout()");
+			jso.jso_checkfortoken('uwap', url, function() {
+				console.log("found token()");
+				App.init();
+			});
+		}, 0);
+	}
+
+
 
 
 

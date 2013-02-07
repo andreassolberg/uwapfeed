@@ -56,10 +56,17 @@ define(function(require, exports, module) {
 
 			this.navbar = new panes.NavBar(this.el.find('#navbar'));
 
+			this.viewconfig = {
+				"hide": {
+					"actionMenu": true,
+					"comments": true,
+					"groups": true
+				}
+			};
 
 			this.pc = new panes.PaneController(this.el.find('#panecontainer'));
 			this.mainnewsfeedPane = this.pc.get('newsfeed');
-			this.mainnewsfeed = new FeedController(this.mainnewsfeedPane);
+			this.mainnewsfeed = new FeedController(this.mainnewsfeedPane, this, this.viewconfig);
 			this.mainnewsfeedPane.activate();
 
 			this.singleitemcontroller = null;
@@ -200,6 +207,10 @@ define(function(require, exports, module) {
 		}
 
 
+		setInterval(function(){ 
+			$("span.ts").prettyDate(); 
+		}, 2000);
+
 		function authpopup(callback) {
 			var url = UWAP.utils.getAppURL('/auth.html');
 			newwindow=window.open(url,'uwap-auth','height=600,width=800');
@@ -215,9 +226,7 @@ define(function(require, exports, module) {
 			return false;
 		}
 
-		setInterval(function(){ 
-			$("span.ts").prettyDate(); 
-		}, 8000);
+
 
 		UWAP.auth.checkPassive(function(user) {
 

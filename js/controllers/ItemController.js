@@ -6,9 +6,17 @@ define(function(require, exports, module) {
 
 		AddCommentController = require('AddCommentController'),
 		MediaPlayerController = require('MediaPlayerController'),
-		ViewController = require('ViewController')
+		ViewController = require('ViewController'),
+		hogan = require('uwap-core/js/hogan'),
+		moment = require('uwap-core/js/moment')
 		;
 
+
+	var tmpl = {
+		"feedItem": require('uwap-core/js/text!templates/feedItem.html'),
+		"feedItemComment": require('uwap-core/js/text!templates/feedItemComment.html'),
+		"participant":  require('uwap-core/js/text!templates/participant.html')
+	};
 
 	var ItemController = function(pane, app) {
 		this.pane = pane;
@@ -20,6 +28,13 @@ define(function(require, exports, module) {
 		this.loadeditems = {};
 
 		this.mediaplayer = new MediaPlayerController(this.pane.el);
+
+
+		this.templates = {
+			"itemTmpl": hogan.compile(tmpl.feedItem),
+			"commentTmpl": hogan.compile(tmpl.feedItemComment),
+			"participant": hogan.compile(tmpl.participant)
+		};
 
 		var vbcel = $('<div class="feedcontainer"></div>')
 			.appendTo(this.pane.el);
@@ -86,12 +101,30 @@ define(function(require, exports, module) {
 			});
 		}
 
-		if (item.user) {
-			item.user.profileimg = UWAP.utils.getEngineURL('/api/media/user/' + item.user.a);
+		if (item.activity && item.activity.actor) {
+			if (item.activity.actor.objectType === 'person') {
+				item.activity.actor.image = {url: UWAP.utils.getEngineURL('/api/media/user/' + item.activity.actor.a)}
+			} else if (item.activity.actor.objectType === 'client') {
+				item.activity.actor.image = {url: UWAP.utils.getEngineURL('/api/media/logo/client/' + item.activity.actor.id)}
+			}
+
+			item.activity.actor.type = {};
+			item.activity.actor.type[item.activity.actor.objectType] = true;
+
 		}
-		if (item.client) {
-			item.client.profileimg = UWAP.utils.getEngineURL('/api/media/logo/client/' + item.client['client_id']);
+
+		if (item.activity.verb) {
+			item.activity.verb_ = {};
+			item.activity.verb_[item.activity.verb] = true;
 		}
+
+		if (item.activity.object) {
+			item.activity.object_ = {};
+			item.activity.object_[item.activity.object.objectType] = item.activity.object;
+		}
+
+
+		item.viewconfig = this.viewconfig;
 
 
 		// console.log("Testing article class", item.class)
@@ -116,8 +149,8 @@ define(function(require, exports, module) {
 			feedcontainer = this.pane.el.find('.feedcontainer');
 
 	
-		h = $("#itemTmpl").tmpl(item);	
-		feedcontainer.prepend(h);
+		h = $(this.templates['itemTmpl'].render(item));
+		h.data('object', item).prependTo(feedcontainer);
 	
 
 		console.log("Add post", item);
@@ -129,7 +162,7 @@ define(function(require, exports, module) {
 		// console.log("Add comment");
 		if (this.loadeditems[item.inresponseto]) {
 			// console.log("found item", item);
-			var h = $("#commentTmpl").tmpl(item);
+			var h = $(this.templates['commentTmpl'].render(item));
 			this.loadeditems[item.inresponseto].find('div.comments').append(h);
 		}
 	}

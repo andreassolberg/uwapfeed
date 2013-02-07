@@ -6,13 +6,24 @@ define(function(require, exports, module) {
 
 		AddCommentController = require('AddCommentController'),
 		MediaPlayerController = require('MediaPlayerController'),
-		ViewController = require('ViewController')
+		ViewController = require('ViewController'),
+		moment = require('uwap-core/js/moment'),
+		hogan = require('uwap-core/js/hogan')
 		;
 
+	var tmpl = {
+		"feedItem": require('uwap-core/js/text!templates/feedItem.html'),
+		"feedItemFile": require('uwap-core/js/text!templates/feedItemFile.html'),
+		"feedItemComment": require('uwap-core/js/text!templates/feedItemComment.html'),
+		"participant":  require('uwap-core/js/text!templates/participant.html')
+	};
 
-	var FeedController = function(pane, app) {
+
+	var FeedController = function(pane, app, viewconfig) {
 		this.pane = pane;
 		this.app = app;
+
+		this.viewconfig = viewconfig || {};
 
 		this.groups = {};
 
@@ -41,6 +52,16 @@ define(function(require, exports, module) {
 		this.pane.el.on('click', '#postDisableBtn', $.proxy(this.postDisable, this));
 
 		this.pane.el.on('click', '.responseOption', $.proxy(this.respond, this));
+
+
+		this.templates = {
+			"itemTmpl": hogan.compile(tmpl.feedItem),
+			"itemTmplFile": hogan.compile(tmpl.feedItemFile),
+			"commentTmpl": hogan.compile(tmpl.feedItemComment),
+			"participant": hogan.compile(tmpl.participant)
+		};
+
+
 
 		// this.load();
 		setInterval($.proxy(this.update, this), 5000);
@@ -88,7 +109,7 @@ define(function(require, exports, module) {
 		var that = this;
 		if (e) e.preventDefault();
 		var targetItem = $(e.currentTarget).closest('div.item');
-		var item = targetItem.tmplItem().data;
+		var item = targetItem.data('object');
 		var status = $(e.currentTarget).data('status');
 		console.log("Response with ", status, item);
 
@@ -99,13 +120,9 @@ define(function(require, exports, module) {
 
 
 
-		
-
 		UWAP.feed.respond(response, function() {
 			console.log("RESPOND COMPLETE");
-
 			that.setMyResponse(targetItem, status);
-
 		});
 
 	}
@@ -123,7 +140,7 @@ define(function(require, exports, module) {
 
 		var targetItem = $(e.currentTarget).closest('div.item');
 		$(e.currentTarget).hide();
-		var item = targetItem.tmplItem().data;
+		var item = targetItem.data('object');
 		// console.log("About to enable comment", this.app.user, targetItem, item);
 		var cc = new AddCommentController(this.app.user, item, targetItem.find('div.postcomment'));
 		cc.onPost($.proxy(this.post, this));
@@ -134,8 +151,8 @@ define(function(require, exports, module) {
 		var that = this;
 		e.preventDefault();
 		var currentItem = $(e.currentTarget).closest('.item');
-		var item = currentItem.tmplItem().data;
-		// console.log('About to delete ', item.id);
+		var item = currentItem.data('object');
+		console.log('About to delete ', currentItem.data());
 
 		UWAP.feed.delete(item.id, function(data) {
 			console.log("Delete response Received", data);
@@ -165,12 +182,40 @@ define(function(require, exports, module) {
 			});
 		}
 
+		if (item.activity && item.activity.actor) {
+			if (item.activity.actor.objectType === 'person') {
+				item.activity.actor.image = {url: UWAP.utils.getEngineURL('/api/media/user/' + item.activity.actor.a)}
+			} else if (item.activity.actor.objectType === 'client') {
+				item.activity.actor.image = {url: UWAP.utils.getEngineURL('/api/media/logo/client/' + item.activity.actor.id)}
+			}
+
+			item.activity.actor.type = {};
+			item.activity.actor.type[item.activity.actor.objectType] = true;
+
+		}
+
+		if (item.activity.verb) {
+			item.activity.verb_ = {};
+			item.activity.verb_[item.activity.verb] = true;
+		}
+
+		if (item.activity.object) {
+			item.activity.object_ = {};
+			item.activity.object_[item.activity.object.objectType] = item.activity.object;
+		}
+
+
+		item.viewconfig = this.viewconfig;
+
+
+		/*
 		if (item.user) {
 			item.user.profileimg = UWAP.utils.getEngineURL('/api/media/user/' + item.user.a);
 		}
 		if (item.client) {
 			item.client.profileimg = UWAP.utils.getEngineURL('/api/media/logo/client/' + item.client['client_id']);
 		}
+		*/
 
 
 		// console.log("Testing article class", item.class)
@@ -196,22 +241,30 @@ define(function(require, exports, module) {
 			h,
 			feedcontainer = this.pane.el.find('.feedcontainer');
 
-		// console.log("Adding post to ", item)
-
+		if (item.activity) {
+			console.log("Adding post [activity] ", item);
+		}
+		
 		if (this.view.view === 'media') {
-			h = $("#itemMediaTmpl").tmpl(item);
-			feedcontainer.find('ul').prepend(h);
+			// TODO TODO ADD TEMPLATE FOR MEDIA ITEMS. Look in DeprecatedJQUery templates folder to find old template...
+			// h = $("#itemMediaTmpl").tmpl(item);
+			// feedcontainer.find('ul').prepend(h);
 
 		} else if (this.view.view === 'file') {
 
-			h = $("#itemFileTmpl").tmpl(item);
-			feedcontainer.prepend(h);
+			// h = $("#itemFileTmpl").tmpl(item);
+			// feedcontainer.prepend(h);
+
+			// DISABLED BECAUSE NOT YET TESTED.
+			// h = $(this.templates['itemTmplFile'].render(item));
+			// h.data('object', item).prependTo(feedcontainer);
 
 		} else {
 
-			h = $("#itemTmpl").tmpl(item);	
-			feedcontainer.prepend(h);
+			h = $(this.templates['itemTmpl'].render(item));
+			h.data('object', item).prependTo(feedcontainer);
 		}
+
 		
 		this.loadeditems[item.id] = h;
 	}
@@ -225,7 +278,11 @@ define(function(require, exports, module) {
 				this.setMyResponse(this.loadeditems[item.inresponseto], item.status);
 			}
 			
-			var h = $("#participantTmpl").tmpl(item);
+			item.statusItem = {};
+			item.statusItem[item.status] = true;
+
+			var h = $(this.templates.participant.render(item)).data('object', item);
+			// var h = $("#participantTmpl").tmpl(item);
 			this.loadeditems[item.inresponseto].find('table.participants').append(h);
 		}
 	}
@@ -233,10 +290,9 @@ define(function(require, exports, module) {
 	FeedController.prototype.addComment = function(item) {
 		// console.log("Add comment");
 		if (this.loadeditems[item.inresponseto]) {
-
-
 			// console.log("found item", item);
-			var h = $("#commentTmpl").tmpl(item);
+			// var h = $("#commentTmpl").tmpl(item);
+			var h = $(this.templates['commentTmpl'].render(item));
 			this.loadeditems[item.inresponseto].find('div.comments').append(h);
 		}
 	}

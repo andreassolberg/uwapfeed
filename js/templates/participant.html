@@ -1,0 +1,31 @@
+<tr>
+	<td style="width: 24px">
+	{{#activity.actor}}
+		<img class="" style="width: 26px; border: 1px solid #ccc" src="{{image.url}}" />
+	{{/activity.actor}}
+
+	</td>
+
+	{{#activity.actor}}
+		<td><span>{{displayName}}</span></td>
+		<td><i class="icon-envelope"></i> <span>{{mail}}</span></td>
+	{{/activity.actor}}
+
+
+
+	<td>
+		{{#statusItem.yes}}
+			<span class="label label-success">Attend</span>
+		{{/statusItem.yes}}
+
+		{{#statusItem.maybe}}
+			<span class="label label-warning">Maybe</span>
+		{{/statusItem.maybe}}
+
+		{{#statusItem.no}}
+			<span class="label label-inverse">Appologized</span>
+		{{/statusItem.no}}
+	</td>
+
+	<td><span><i class=" icon-time"></i> <span class="ts" data-ts="{{ts}}"></span></span></td>
+</tr>

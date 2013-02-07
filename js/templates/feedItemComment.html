@@ -1,0 +1,37 @@
+<div id="{{id}}" class="comment">
+
+
+	{{#activity.actor}}
+		<img class="profileimg img-polaroid" src="{{image.url}}" />
+	{{/activity.actor}}
+
+
+	<div class="footer">
+
+		{{#activity.actor}}
+			<span>
+				{{#type.person}}
+					<i class="icon-user"></i> 
+				{{/type.person}}
+
+				{{#type.client}}
+					<i class="icon-briefcase"></i> 
+				{{/type.client}}
+
+				{{displayName}}</span>
+		{{/activity.actor}}
+
+		
+		<span><i class=" icon-time"></i> <span class="ts" data-ts="{{ts}}"></span></span>
+		
+	</div>
+
+	{{#title}}
+		<h4>{{title}}</h4>
+	{{/title}}
+
+	{{#message}}
+		<p>{{message}}</p>
+	{{/message}}
+
+</div>

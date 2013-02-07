@@ -37,13 +37,14 @@ null);E(c)||(d=c,c=[]);!c.length&&D(d)&&d.length&&(d.toString().replace(ca,"").r
 
 requirejs.config({
 	paths: {
-		'jquery' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min',
-		'uwap-core' : 'http://core.app.bridge.uninett.no/_',
-		'uwap-core/bootstrap/js/bootstrap': 'http://core.app.bridge.uninett.no/_/bootstrap/js/bootstrap.min',
-		// 'text'		: 'http://core.app.bridge.uninett.no/_/js/text',
-		'uwap': '/_/js',
+		'jquery' : 'uwaplib/jquery/jquery-1.9.1.min',
+		'uwap-core' : 'uwaplib',
+		'uwap-core/bootstrap/js/bootstrap': 'uwaplib/bootstrap/js/bootstrap.min',
+		// 'text'		: 'https://core.uwap.org/_/js/text',
+		'uwap': 'uwaplib/js',
 	},
-	// baseUrl: "/js",
+	//baseUrl: "https://moterom.uwap.org/js",
+	baseUrl: "js",
 	shim: {
 		'uwap-core/js/jquery.tmpl': {deps: ['jquery'], exports: 'jQuery'},
 
@@ -64,7 +65,7 @@ requirejs.config({
 		'uwap-core/bootstrap/js/bootstrap-typeahead': {deps: ['jquery', 'uwap-core/bootstrap/js/bootstrap'], exports: 'jQuery'}
 	}
 });
-requirejs.enginehostname = 'app.bridge.uninett.no';
-requirejs.hostname = 'feed.app.bridge.uninett.no';
-requirejs.scheme = 'http';
-requirejs.appid = 'feed';
+requirejs.enginehostname = 'uwap.org';
+requirejs.hostname = 'moterom.uwap.org';
+requirejs.scheme = 'https';
+requirejs.appid = 'moterom';
