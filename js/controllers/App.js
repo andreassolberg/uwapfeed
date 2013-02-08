@@ -16,6 +16,8 @@ define(function(require, exports, module) {
 
 		NotificationsController = require('NotificationsController'),
 
+		Push = require('Push'),
+
 		panes = require('controllers/panes'),
 
 		moment = require('uwap-core/js/moment'),
@@ -52,6 +54,11 @@ define(function(require, exports, module) {
 		this.groups = {};
 
 		this.routingEnabled = true;
+
+
+		if (window.isPhonegap) {
+			var push = new Push();
+		}
 
 		this.templates = {
 			"subscriptionList": hogan.compile(tmpl.subscriptionList),

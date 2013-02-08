@@ -56,4 +56,6 @@
 -->
 
     <gap:plugin name="ChildBrowser" />
+    <gap:plugin name="GenericPush" /> <!-- latest release -->
+    
 </widget>

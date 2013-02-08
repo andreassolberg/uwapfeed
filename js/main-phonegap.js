@@ -18,6 +18,7 @@ define(function(require, exports, module) {
 
 	var runapp = function() {
 
+
 		// UWAP.utils.enginehostname = 'app.bridge.uninett.no';
 		// UWAP.utils.hostname = 'localhost';
 		// UWAP.utils.scheme = 'http';
