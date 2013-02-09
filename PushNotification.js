@@ -1,6 +1,9 @@
 (function(cordova) {
     var cordovaRef = window.PhoneGap || window.Cordova || window.cordova;
 
+
+    window.foo = 'yes';
+
 	function PushNotification() {}
 
 	// Call this to register for push notifications. Content of [options] depends on whether we are working with APNS (iOS) or GCM (Android)
