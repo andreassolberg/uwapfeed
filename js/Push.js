@@ -4,6 +4,8 @@ define(function(require, exports, module) {
 		$ = require('jquery'),
 		UWAP = require('uwap-core/js/core');
 
+	var pushNotification = window.plugins.pushNotification;
+
 	var Push = function() {
 
 		this.register();
