@@ -17,13 +17,14 @@ define(function(require, exports, module) {
 	}
 
 	Push.prototype.register = function(e) {
-		pushNotification.register(
-			$.proxy(this.tokenHandler, this), 
+		pushNotification.register(function(token) {
+				console.log("Registered with token " + token);
+			}, 
 			function() {
 				console.log("Error registering...");
 			}, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"}
 		);
-
+		console.log("Reigster completed...")
 	}
 
 	Push.prototype.successHandler = function(result) {
